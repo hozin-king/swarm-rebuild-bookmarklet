@@ -5,6 +5,33 @@ Semua perubahan penting pada repo ini dicatat di sini. Format mengikuti
 
 All notable changes to this repository are documented here.
 
+## [v3.0.0] — 7 November 2026
+
+### Ditambahkan / Added
+
+- **Mode screenshot**: tombol **📷** di bar menyembunyikan SEMUA elemen
+  swarm sekaligus (bar, kursor, badge, ruler, FPS meter, pil) supaya halaman
+  bisa dipotret bersih; ketuk di mana saja untuk mengembalikan. README
+  menjelaskan dengan jujur bahwa screenshot menangkap semua elemen DOM,
+  jadi menyembunyikan dulu adalah satu-satunya jalan.
+- **FPS meter**: pil kecil di kiri bawah menampilkan FPS live (rAF delta
+  dihaluskan, rata-rata ~500ms); ikut tersembunyi saat bar disembunyikan
+  atau mode screenshot; bisa dimatikan dari Pengaturan.
+- **Panel Pengaturan** (tombol **⚙** di bar): kecepatan build 1×/2×/3×
+  (`engine.speed` asli), suara Nyala/Mati (`sfx.setOn` asli), FPS meter
+  Nyala/Mati, throttle render Nyala/Mati, dan sembunyikan bar. Jumlah agen
+  sengaja TIDAK dipasang — konstanta IIFE upstream yang tidak terekspos,
+  jadi toggle-nya akan palsu.
+
+### Diperbaiki / Fixed
+
+- Tombol sembunyikan **▾** diverifikasi bekerja di kedua keadaan HUD —
+  saat membangun maupun setelah selesai ("Rebuilt by N agents...").
+- Listener keluar-mode-screenshot dipasang di host dengan
+  `composedPath()[0]` (bukan di shadow root): klik dari dalam shadow DOM
+  di-retarget jadi host, sehingga listener di shadow root tidak menerima
+  ketukan yang mendarat langsung di host.
+
 ## [v2.0.0] — 7 November 2026
 
 ### Ditambahkan / Added

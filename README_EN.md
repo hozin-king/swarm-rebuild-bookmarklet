@@ -21,6 +21,9 @@ This is a bookmarklet version of the **Swarm Rebuild** Chrome extension by [Dhva
 - [Install on Chrome Android](#install-on-chrome-android)
 - [How to use](#how-to-use)
 - [Hide the bar temporarily](#hide-the-bar-temporarily)
+- [Screenshot mode](#screenshot-mode)
+- [FPS meter](#fps-meter)
+- [Settings](#settings)
 - [Mobile optimization](#mobile-optimization)
 - [Performance on phones (anti-lag)](#performance-on-phones-anti-lag)
 - [Automatic updates](#automatic-updates)
@@ -35,7 +38,10 @@ This is a bookmarklet version of the **Swarm Rebuild** Chrome extension by [Dhva
 - 🖱️ **Live rebuild** — the page is wiped to a blank canvas, then rebuilt block by block by swarm cursors.
 - 📱 **Optimized for phones** — the bottom bar is restyled to fit small screens, including the Android gesture-bar safe area.
 - 🚀 **Anti-lag** — GPU-heavy effects are disabled and rendering is capped at ~30fps on phone screens.
-- 👁️ **Hidable bar** — hide the bottom bar temporarily without stopping the rebuild.
+- 👁️ **Hidable bar** — hide the bottom bar temporarily without stopping the rebuild, while building or after it finishes.
+- 📷 **Screenshot mode** — one tap hides ALL swarm elements (bar, cursors, FPS, pill) so the page can be screenshotted cleanly.
+- 📊 **FPS meter** — a live frames-per-second number in the bottom-left corner, switchable from Settings.
+- ⚙️ **Settings** — a small panel for speed, sound, FPS, and render throttle (every control actually works — no fake toggles).
 - 🔄 **Automatic updates** — the bookmark loads the loader from this repo, so fixes apply without editing the bookmark.
 - 🔁 **Toggle** — one tap turns it on, another turns it off.
 
@@ -84,11 +90,48 @@ Buttons on the bottom bar:
 - **Go live** — return to the original page once the rebuild is done.
 - **Replay** — wipe and rebuild from the start.
 - **▾** — hide the bar temporarily (see below).
+- **⚙** — open the Settings panel (see below).
+- **📷** — screenshot mode: hide all swarm elements at once (see below).
 - **✕** — exit.
 
 ## Hide the bar temporarily
 
 If the bottom bar covers the page being rebuilt, tap the **▾** button at the end of the bar. The bar disappears, but the rebuild **keeps running** in the background — the cursors keep working. A small **👁 Show bar** pill appears in the bottom-right corner; tap it to bring the bar back. The **✕** button (exit swarm) is untouched and keeps working; if the bar is hidden, show it first and then tap ✕, or press back/Escape.
+
+The ▾ button works in **both bar states** — while still building and after it finishes ("Rebuilt by N agents..."). The finished bar is the same HUD, only its status text and buttons change, so the hide button stays in the same place.
+
+## Screenshot mode
+
+A screenshot captures every DOM element visible on screen — including the bar, the cursors, and the FPS meter. **There is no way to hide elements automatically when a screenshot is taken**, so the only way is to hide them before taking the shot and show them again after. Screenshot mode does that in one tap:
+
+1. Tap the **📷** button on the bottom bar.
+2. All swarm elements disappear at once: the bar, all cursors, badges, ruler lines, the FPS meter, and the pill.
+3. Take the screenshot as usual.
+4. Tap anywhere on the page to bring everything back.
+
+Note: while screenshot mode is active, a small toast appears ("Screenshot mode — tap anywhere to restore") and fades away on its own after ~2 seconds. Don't tap any bar button while in this mode — there are no buttons left; a tap on the page area restores the view.
+
+## FPS meter
+
+A small pill in the bottom-left corner shows a **live FPS number** (frames per second) while the swarm runs — useful for feeling whether a page lags on your phone. The number is computed from smoothed animation-frame deltas (a ~500ms rolling average).
+
+- The pill hides together with the bar or in screenshot mode.
+- On phone screens it sits a bit higher so it doesn't overlap the two-row bar.
+- It can be switched off from the Settings panel (⚙ → FPS meter → Off).
+
+Honest note: this measures the page's animation-frame loop, not the GPU directly — use it as a rough sense of lag, not a benchmark.
+
+## Settings
+
+Tap the **⚙** button on the bottom bar to open a small Settings panel (phone-friendly). It only contains controls that actually work — every control was verified against the upstream code before being added:
+
+- **Speed** — 1× / 2× / 3× (changes the real `engine.speed`; the 1× button on the bar changes along). Disabled after the rebuild finishes, because speed only matters while building.
+- **Sound** — On / Off (changes the real `sfx`; off by default on phones).
+- **FPS meter** — On / Off.
+- **Render throttle** — On / Off (the ~30fps cap from v2; turn it off if your phone is strong enough and you want the smoothest possible rebuild).
+- **Hide bar** — hides the bar (same as the ▾ button).
+
+**Why is there no agent-count setting?** The agent count is a constant inside the upstream code (min 8, max 48, flock 36) that is not exposed — there is no API to change it. Adding a toggle would mean a fake toggle: a button that does nothing. So it isn't there. Settings are temporary per page (not saved across pages).
 
 ## Mobile optimization
 
@@ -108,7 +151,7 @@ The patch is loaded automatically by the bookmarklet. If the patch fails to load
 To keep phones from lagging, the patch also lightens the rendering load on small screens:
 
 - **Blur filters off**: the per-image blur animation, backdrop blur, and per-cursor drop shadows are the heaviest load on a phone GPU — all are replaced with lighter effects (plain fades, solid backgrounds). The rebuild looks the same, just slightly less "sparkly".
-- **Rendering capped at ~30fps**: the view updates every second frame; the rebuild logic still runs at full speed, so nothing is skipped or broken.
+- **Rendering capped at ~30fps**: the view updates every second frame; the rebuild logic still runs at full speed, so nothing is skipped or broken. It can be switched off from Settings (⚙ → Render throttle → Off) if your phone is strong enough.
 - **Sound off by default**: the swarm sounds don't turn on by themselves on phones (saves battery). Tap the sound button on the bottom bar to turn them on.
 
 Deliberately **not** changed: the cursor count (set by the engine itself, 8–48 cursors, can't be locked from outside without breaking how it works) and the build speed (still your choice via the 1× button — faster means heavier per frame).
@@ -146,6 +189,12 @@ Yes — the code is the same. The mobile patch only activates on screens ≤600p
 **How do updates work?**
 Automatically. The bookmark loads the loader from this repo (`main`), so every push applies as soon as the jsDelivr cache refreshes (a few minutes to a few hours).
 
+**How do I take a screenshot without the bar/cursors?**
+Use screenshot mode: tap the 📷 button on the bar, all swarm elements disappear, then take the shot. A screenshot captures every DOM element, so there is no automatic way — they have to be hidden first. Tap anywhere on the page to bring everything back.
+
+**Why is there no agent-count setting?**
+The agent count is a constant inside the upstream code (8–48) that isn't exposed — there is no API to change it. Adding a toggle would mean a fake toggle, so it isn't there.
+
 **Why does my bottom bar look different from the original video?**
 That's the mobile patch: the bar is tidied up to fit phone screens. On desktop, the bar looks like the original.
 
@@ -170,7 +219,7 @@ This repo does **not** include a copy of `swarm.js` — the original file is alw
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) — v1.0 initial bookmarklet, v1.1 auto-update stub, v2.0 anti-lag + hideable bar.
+See [CHANGELOG.md](CHANGELOG.md) — v1.0 initial bookmarklet, v1.1 auto-update stub, v2.0 anti-lag + hideable bar, v3.0 screenshot mode + FPS meter + Settings.
 
 ## Credits & license
 
