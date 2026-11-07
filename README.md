@@ -46,7 +46,12 @@ Tombol-tombol di bar bawah:
 - **1×** — kecepatan build (ketuk untuk mengganti).
 - **Go live** — kembali ke halaman asli setelah rebuild selesai.
 - **Replay** — hapus dan bangun ulang dari awal.
+- **▾** — sembunyikan bar sementara (lihat di bawah).
 - **✕** — keluar.
+
+## Sembunyikan bar sementara
+
+Kalau bar bawah menghalangi halaman yang sedang dibangun ulang, ketuk tombol **▾** di ujung bar. Bar hilang, tapi rebuild **tetap jalan** di belakang — kursor-kursor terus bekerja. Di pojok kanan bawah muncul pil kecil **👁 Tampilkan bar**; ketuk pil itu untuk mengembalikan barnya. Tombol **✕** (keluar dari swarm) tidak disentuh dan tetap berfungsi; kalau bar sedang tersembunyi, tampilkan dulu baru ketuk ✕, atau tekan tombol kembali/Escape.
 
 ## Yang baru: optimasi mobile
 
@@ -60,6 +65,18 @@ Versi ini menambahkan `swarm-mobile.js` — patch kecil yang merapikan bar bawah
 - Desktop tidak berubah sama sekali — patch hanya aktif di layar ≤600px.
 
 Patch dimuat otomatis oleh bookmarklet. Kalau patch gagal dimuat (misalnya tidak ada internet), Swarm Rebuild tetap jalan normal seperti versi awal.
+
+## Performa di HP (anti-lag)
+
+Supaya tidak lag di HP, patch juga meringankan beban render khusus di layar kecil:
+
+- **Filter blur dimatikan**: animasi blur tiap gambar, backdrop blur, dan bayangan tiap kursor adalah yang paling berat di GPU HP — semuanya diganti efek yang lebih ringan (fade polos, latar solid). Tampilan rebuild tetap sama, hanya sedikit kurang "berkilau".
+- **Render dibatasi ~30fps**: tampilan diperbarui tiap frame kedua; logika rebuild tetap jalan penuh, jadi tidak ada yang terlewat atau rusak.
+- **Suara mati secara default**: bunyi-bunyian swarm tidak menyala sendiri di HP (hemat baterai). Ketuk tombol suara di bar bawah kalau mau menyalakannya.
+
+Yang sengaja **tidak** diubah: jumlah kursor (diatur sendiri oleh engine, 8–48 ekor, tidak bisa dikunci dari luar tanpa merusak cara kerjanya) dan kecepatan build (tetap pilihanmu lewat tombol 1× — makin cepat makin berat per frame).
+
+Catatan jujur: seberapa terasa penghematan ini tergantung HP dan berat halamannya — angka pastinya hanya bisa dirasakan lewat tes di perangkat asli, bukan diuji dari simulasi.
 
 ## Batasan
 
