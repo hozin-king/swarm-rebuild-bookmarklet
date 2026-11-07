@@ -1,0 +1,46 @@
+MIT License
+
+Copyright (c) 2026 hozin-king
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Catatan / Note
+
+Lisensi MIT di atas mencakup file-file yang dibuat untuk repo ini: loader
+(`swarm-bookmarklet.js`), patch mobile (`swarm-mobile.js`), dokumentasi
+(`README.md`, `README_EN.md`, `CHANGELOG.md`), dan demo (`demo.svg`,
+`docs/screenshot-poco.jpg`).
+
+Lisensi ini **TIDAK** mencakup `swarm.js` — engine Swarm Rebuild dari
+upstream — yang **tidak ada** di repo ini. File tersebut dimuat saat runtime
+langsung dari repo [DhvanilPatel/swarm-cursors](https://github.com/DhvanilPatel/swarm-cursors)
+dan tetap menjadi milik pembuatnya. Repo upstream saat ini belum berlisensi.
+
+The MIT license above covers the files created for this repository: the loader
+(`swarm-bookmarklet.js`), the mobile patch (`swarm-mobile.js`), the
+documentation (`README.md`, `README_EN.md`, `CHANGELOG.md`), and the demo
+(`demo.svg`, `docs/screenshot-poco.jpg`).
+
+It does **NOT** cover `swarm.js` — the upstream Swarm Rebuild engine — which
+is **not** included in this repository. That file is loaded at runtime
+directly from [DhvanilPatel/swarm-cursors](https://github.com/DhvanilPatel/swarm-cursors)
+and remains the property of its author. The upstream repo is currently
+unlicensed.
