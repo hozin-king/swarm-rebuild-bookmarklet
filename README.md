@@ -8,11 +8,19 @@ Ini adalah versi bookmarklet dari ekstensi Chrome **Swarm Rebuild** karya [Dhvan
 
 ## Kode bookmarklet
 
-Salin kode di bawah ini utuh (satu baris):
+Salin kode di bawah ini utuh (satu baris). Ini kode **stub** — tugasnya cuma memuat loader dari repo ini. Semua logika (termasuk update) tinggal di repo, jadi bookmark ini tidak perlu diganti lagi saat ada update:
 
 ```js
-javascript:(function(){if(window.__swarmRebuild){window.__swarmRebuild.toggle();return;}var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/DhvanilPatel/swarm-cursors@3d49e0ac96172eb6af7ae8229b2152121bed2092/swarm-rebuild/swarm.js';s.onload=function(){var m=document.createElement('script');m.src='https://cdn.jsdelivr.net/gh/hozin-king/swarm-rebuild-bookmarklet@main/swarm-mobile.js';m.onerror=function(){};(document.head||document.documentElement).appendChild(m);};s.onerror=function(){alert('Swarm Rebuild gagal dimuat. Cek koneksi internet atau CSP halaman ini.');};(document.head||document.documentElement).appendChild(s);})();
+javascript:(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/gh/hozin-king/swarm-rebuild-bookmarklet@main/swarm-bookmarklet.js';s.onerror=function(){alert('Swarm Rebuild gagal dimuat. Cek koneksi internet atau CSP halaman ini.');};(document.head||document.documentElement).appendChild(s);})();
 ```
+
+## Update otomatis
+
+Bookmark di atas **tidak perlu diganti lagi** kalau ada update. Cara kerjanya:
+
+- Bookmark hanya memuat `swarm-bookmarklet.js` dari repo ini (branch `main`, lewat jsDelivr). Setiap perbaikan — patch mobile, perbaikan loader, sampai pin upstream — cukup di-push ke repo ini, langsung kepakai tanpa sentuh bookmark.
+- `swarm.js` upstream juga ikut versi terbaru (`main` repo pembuat). Kalau versi terbaru gagal dimuat (misalnya file dipindah), loader otomatis jatuh ke commit `3d49e0ac` yang sudah teruji.
+- Cache jsDelivr biasanya ikut refresh beberapa menit setelah push, paling lambat beberapa jam. Kalau baru saja update tapi bookmark masih memuat versi lama, tunggu sebentar lalu coba lagi.
 
 ## Cara pasang di Chrome Android
 
@@ -64,10 +72,11 @@ Patch dimuat otomatis oleh bookmarklet. Kalau patch gagal dimuat (misalnya tidak
 
 ## Cara kerja
 
-Bookmarklet memuat dua script, berurutan:
+Bookmarklet memuat script berurutan:
 
-1. `swarm.js` asli dari repo [DhvanilPatel/swarm-cursors](https://github.com/DhvanilPatel/swarm-cursors) (di-pin ke commit `3d49e0ac`, lewat jsDelivr). Sekali dimuat, script ini langsung berjalan sendiri; dimuat kedua kali, ia mematikan efek (toggle).
-2. `swarm-mobile.js` dari repo ini — patch CSS yang disuntikkan ke shadow root Swarm Rebuild supaya bar bawah muat di layar HP. Kalau gagal dimuat, efek tetap jalan tanpa patch.
+1. **Stub di bookmark** memuat `swarm-bookmarklet.js` dari repo ini (`main`, lewat jsDelivr).
+2. **Loader** memuat `swarm.js` asli dari repo [DhvanilPatel/swarm-cursors](https://github.com/DhvanilPatel/swarm-cursors) — versi terbaru (`main`), dengan fallback otomatis ke commit `3d49e0ac` yang sudah teruji bila gagal. Sekali dimuat, script ini langsung berjalan sendiri; dimuat kedua kali, ia mematikan efek (toggle).
+3. **Loader** lalu memuat `swarm-mobile.js` dari repo ini — patch CSS yang disuntikkan ke shadow root Swarm Rebuild supaya bar bawah muat di layar HP. Kalau gagal dimuat, efek tetap jalan tanpa patch.
 
 Repo ini **tidak** menyertakan salinan `swarm.js` — file aslinya selalu diambil dari repo pembuat.
 
@@ -81,4 +90,4 @@ Repo ini **tidak** menyertakan salinan `swarm.js` — file aslinya selalu diambi
 
 ## English summary
 
-**Swarm Rebuild as a bookmarklet for Chrome Android.** Tap the bookmark on any page: the page is wiped to a blank canvas and rebuilt live by colorful swarm cursors. One tap toggles it on, another tap turns it off. Includes a small mobile patch (`swarm-mobile.js`) that keeps the bottom HUD bar inside phone viewports (≤600px); desktop is untouched. Visual rebuild only — not a clone, no site files are produced. The upstream `swarm.js` is loaded straight from the author's repo via jsDelivr (pinned commit); no upstream code is redistributed here.
+**Swarm Rebuild as a bookmarklet for Chrome Android.** Tap the bookmark on any page: the page is wiped to a blank canvas and rebuilt live by colorful swarm cursors. One tap toggles it on, another tap turns it off. Includes a small mobile patch (`swarm-mobile.js`) that keeps the bottom HUD bar inside phone viewports (≤600px); desktop is untouched. Visual rebuild only — not a clone, no site files are produced. The bookmark is a stub that loads the loader from this repo (`@main`), so updates ship automatically; the upstream `swarm.js` is loaded straight from the author's repo via jsDelivr (latest `main`, with a pinned-commit fallback) and no upstream code is redistributed here.
